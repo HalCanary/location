@@ -1,21 +1,21 @@
 
-Location: Location.m Location.info.plist
+Location: Location.m Location.info.plist Location.entitlements.plist Makefile
 	cc $< \
 	  -framework CoreLocation  \
 	  -framework AppKit  \
 	  -sectcreate __TEXT __info_plist Location.info.plist \
+	  -sectcreate __TEXT __entitlements Location.entitlements.plist \
 	  -o $@
 
-codesign.stamp: Location
+codesign.stamp: Location Location.entitlements.plist
 	codesign \
 	  -s ${CODESIGN_IDENTITY} \
+	  --entitlements Location.entitlements.plist \
+	  --deep $< \
 	  --verbose --force \
-	  --options runtime $<
+	  --options runtime
 	codesign -d --entitlements /dev/stdout $< 
 	touch $@
-
-run: Location 
-	./Location
 
 Location.zip: Location codesign.stamp
 	zip $@ $^
@@ -28,7 +28,10 @@ notarize.stamp: Location.zip
 	  --password ${CODESIGN_PASSWORD}
 	touch $@
 
+run: notarize.stamp
+	./Location
+
 clean:
-	rm Location
+	rm Location notarize.stamp codesign.stamp
 
 .PHONY: run clean

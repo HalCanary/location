@@ -10,8 +10,6 @@
     <string>com.example.Location</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
-    <key>com.apple.security.personal-information.location</key>
-    <true/>
     <key>NSLocationUsageDescription</key>
     <string>for coordinates</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
